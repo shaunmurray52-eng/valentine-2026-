@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Will You Be My Valentine? 💝</title>
+  <style>
+    :root{
+      --bg1:#ffafbd;
+      --bg2:#ffc3a0;
+      --btn:#ff6b6b;
+      --btnHover:#ff8787;
+      --text:#ff4757;
+      --card: rgba(255,255,255,.86);
+      --shadow: 0 18px 45px rgba(0,0,0,.12);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; min-height:100vh;
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      display:grid; place-items:center;
+      color:#222;
+      background: linear-gradient(135deg,var(--bg1),var(--bg2));
+      overflow:hidden;
+    }
+    .float-layer{
+      position:fixed; inset:0;
+      pointer-events:none;
+      overflow:hidden;
+    }
+    .floaty{
+      position:absolute;
+      font-size: 28px;
+      opacity:.85;
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,.12));
+      animation: floatUp var(--dur) linear infinite;
+      transform: translateY(110vh);
+    }
+    @keyframes floatUp{
+      0%{ transform: translate(var(--x0),110vh) rotate(0deg); opacity:0;}
+      10%{opacity:.85}
+      100%{ transform: translate(var(--x1),-15vh) rotate(12deg); opacity:0;}
+    }
+
+    .wrap{ width:min(720px, 92vw); padding: 18px; }
+    .card{
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,.55);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      padding: 26px 22px;
+      backdrop-filter: blur(10px);
+      text-align:center;
+      position:relative;
+    }
+    h1{
+      margin:0 0 8px;
+      font-size: clamp(26px, 4vw, 34px);
+      letter-spacing: -.02em;
+      color: var(--text);
+    }
+    .sub{
+      margin: 0 0 18px;
+      color:#333;
+      opacity:.9;
+    }
+    .question{
+      font-size: clamp(18px, 2.7vw, 22px);
+      margin: 10px 0 18px;
+      font-weight: 650;
+    }
+    .btn-row{
+      display:flex;
+      gap: 12px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top: 10px;
+    }
+    button{
+      border:0;
+      border-radius: 999px;
+      padding: 12px 18px;
+      font-size: 16px;
+      cursor:pointer;
+      transition: transform .08s ease, background .15s ease, opacity .15s ease;
+      background: var(--btn);
+      color: #fff;
+      box-shadow: 0 10px 22px rgba(255, 107, 107, .35);
+      min-width: 140px;
+    }
+    button:hover{ background: var(--btnHover); }
+    button:active{ transform: scale(.98); }
+    .secondary{
+      background: rgba(255,255,255,.8);
+      color:#222;
+      box-shadow: 0 10px 22px rgba(0,0,0,.08);
+      border: 1px solid rgba(0,0,0,.08);
+    }
+    .secondary:hover{ background: rgba(255,255,255,.92); }
+
+    .secret{
+      margin-top: 10px;
+      font-size: 14px;
+      color:#222;
+      opacity:.75;
+    }
+    .secret-bubble{
+      display:none;
+      margin-top: 10px;
+      padding: 10px 12px;
+      background: rgba(255,255,255,.9);
+      border: 1px dashed rgba(0,0,0,.16);
+      border-radius: 14px;
+      font-size: 14px;
+    }
+
+    .meter{
+      margin: 16px auto 10px;
+      width: min(520px, 90%);
+      text-align:left;
+    }
+    .meter label{ display:block; font-size: 14px; opacity:.8; margin-bottom: 8px; }
+    input[type="range"]{
+      width:100%;
+      accent-color: var(--btn);
+    }
+    .meterline{
+      display:flex;
+      gap: 10px;
+      align-items:center;
+      justify-content:space-between;
+      margin-top: 8px;
+      font-size: 14px;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.8);
+      border: 1px solid rgba(0,0,0,.08);
+      box-shadow: 0 10px 18px rgba(0,0,0,.06);
+    }
+
+    .footer{
+      margin-top: 14px;
+      font-size: 13px;
+      opacity:.75;
+    }
+    .footer a{ color: inherit; }
+
+    /* Celebration */
+    .celebrate{
+      display:none;
+      margin-top: 8px;
+    }
+    .celebrate h2{
+      margin: 14px 0 6px;
+      color: var(--text);
+      font-size: 26px;
+    }
+    .emoji-party{
+      position:fixed; inset:0;
+      pointer-events:none;
+    }
+    .party-emoji{
+      position:absolute;
+      font-size: 30px;
+      animation: popBounce var(--bs) ease-in-out infinite;
+      filter: drop-shadow(0 8px 14px rgba(0,0,0,.12));
+    }
+    @keyframes popBounce{
+      0%,100%{ transform: translateY(0) scale(1); }
+      50%{ transform: translateY(-10px) scale(1.05); }
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:center;
+      margin-bottom: 12px;
+    }
+    .badge{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.72);
+      border: 1px solid rgba(0,0,0,.08);
+      font-size: 13px;
+      box-shadow: 0 10px 18px rgba(0,0,0,.06);
+    }
+    .music-btn{
+      min-width: auto;
+      padding: 10px 14px;
+      font-size: 14px;
+    }
+    .tiny{
+      font-size: 12px;
+      opacity:.75;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="float-layer" id="floatLayer" aria-hidden="true"></div>
+  <div class="emoji-party" id="partyLayer" aria-hidden="true"></div>
+
+  <div class="wrap">
+    <div class="card" id="card">
+      <div class="topbar">
+        <div class="badge" id="titleBadge">💝 For <span id="valName"></span></div>
+        <button class="music-btn secondary" id="musicBtn" style="display:none">🎵 Play Music</button>
+      </div>
+
+      <h1 id="mainTitle">Will You Be My Valentine? 💝</h1>
+      <p class="sub" id="subTitle">Just a tiny question… with a tiny bit of chaos 🧸</p>
+
+      <div class="question" id="questionText"></div>
+
+      <div id="step1">
+        <div class="btn-row">
+          <button id="s1Yes">Yes</button>
+          <button id="s1No" class="secondary">No</button>
+        </div>
+        <div class="secret">Psst… hover the “No” 😈</div>
+        <div class="secret-bubble" id="secretBubble"></div>
+      </div>
+
+      <div id="step2" style="display:none">
+        <div class="meter">
+          <label id="meterLabel">This much! <strong id="pct">100%</strong></label>
+          <input type="range" min="100" max="6000" value="100" id="slider" />
+          <div class="meterline">
+            <span class="pill">💗 <span id="meterMsg">yurr</span></span>
+            <span class="pill">🧸 <span id="meterHint">Slide it 😅</span></span>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button id="nextBtn">Next</button>
+          <button id="noThanks2" class="secondary">No thanks</button>
+        </div>
+        <div class="tiny">Note: I kept a real opt-out button because consent > memes.</div>
+      </div>
+
+      <div id="step3" style="display:none">
+        <div class="btn-row">
+          <button id="finalYes">Yes!</button>
+          <button id="finalNo" class="secondary">No</button>
+        </div>
+        <div class="footer">If not, totally okay: <a href="#" id="noThanks3">No thanks</a></div>
+      </div>
+
+      <div class="celebrate" id="celebrate">
+        <h2 id="celTitle">ZOO WEE MAMA!</h2>
+        <p id="celMsg" style="margin:0; font-size:16px; line-height:1.45;"></p>
+        <div class="btn-row" style="margin-top:18px;">
+          <button class="secondary" id="restartBtn">Restart</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ---- CONFIG (edit this like your original) ----
+    const CONFIG = {
+      valentineName: "Madi",
+      pageTitle: "Will You Be My Valentine? 💝",
+      floatingEmojis: {
+        hearts: ['❤️','💖','💝','💗','💓'],
+        bears: ['🧸','🐻']
+      },
+      questions: {
+        first: { text:"Do you like me?", yesBtn:"Yes", noBtn:"No", secretAnswer:"I don't like you, I love you! ❤️" },
+        second:{ text:"How much do you like me?", startText:"This much!", nextBtn:"Next" },
+        third: { text:"Will you be my Valentine on February 14th, 2026? 🌹", yesBtn:"Yes!", noBtn:"No" }
+      },
+      loveMessages: {
+        extreme: "To the Moon and Back Bitch??",
+        high: "To the Moon and Back Bro?",
+        normal: "yurr"
+      },
+      celebration: {
+        title: "ZOO WEE MAMA!",
+        message: "Now come get your gift… a knuckle sandwich for you not making dinner......I'm jp... I’ll give a hug",
+        emojis: "🎁💖🤗💝💋❤️💕"
+      },
+      colors: {
+        backgroundStart:"#ffafbd",
+        backgroundEnd:"#ffc3a0",
+        buttonBackground:"#ff6b6b",
+        buttonHover:"#ff8787",
+        textColor:"#ff4757"
+      },
+      animations: {
+        floatDuration:"15s",
+        floatDistance:"50px",
+        bounceSpeed:"0.5s",
+        heartExplosionSize: 1.5
+      },
+      music: {
+        enabled: false,
+        autoplay: false,
+        // IMPORTANT: YouTube links won't work here. Use a direct audio file URL (.mp3/.ogg)
+        musicUrl: "",
+        startText: "🎵 Play Music",
+        stopText: "🔇 Stop Music",
+        volume: 0.5
+      }
+    };
+
+    // ---- Apply theme + titles ----
+    document.title = CONFIG.pageTitle;
+    document.getElementById("mainTitle").textContent = CONFIG.pageTitle;
+    document.getElementById("valName").textContent = CONFIG.valentineName;
+
+    const root = document.documentElement;
+    root.style.setProperty("--bg1", CONFIG.colors.backgroundStart);
+    root.style.setProperty("--bg2", CONFIG.colors.backgroundEnd);
+    root.style.setProperty("--btn", CONFIG.colors.buttonBackground);
+    root.style.setProperty("--btnHover", CONFIG.colors.buttonHover);
+    root.style.setProperty("--text", CONFIG.colors.textColor);
+
+    // ---- Elements ----
+    const qText = document.getElementById("questionText");
+
+    const step1 = document.getElementById("step1");
+    const step2 = document.getElementById("step2");
+    const step3 = document.getElementById("step3");
+    const celebrate = document.getElementById("celebrate");
+
+    const s1Yes = document.getElementById("s1Yes");
+    const s1No  = document.getElementById("s1No");
+    const secretBubble = document.getElementById("secretBubble");
+
+    const slider = document.getElementById("slider");
+    const pct = document.getElementById("pct");
+    const meterLabel = document.getElementById("meterLabel");
+    const meterMsg = document.getElementById("meterMsg");
+    const nextBtn = document.getElementById("nextBtn");
+    const noThanks2 = document.getElementById("noThanks2");
+
+    const finalYes = document.getElementById("finalYes");
+    const finalNo = document.getElementById("finalNo");
+    const noThanks3 = document.getElementById("noThanks3");
+
+    const celTitle = document.getElementById("celTitle");
+    const celMsg = document.getElementById("celMsg");
+    const restartBtn = document.getElementById("restartBtn");
+
+    // ---- Step 1 setup ----
+    function showStep(n){
+      step1.style.display = (n===1) ? "block":"none";
+      step2.style.display = (n===2) ? "block":"none";
+      step3.style.display = (n===3) ? "block":"none";
+      celebrate.style.display = (n===4) ? "block":"none";
+    }
+
+    function setQuestion(text){
+      qText.textContent = text;
+    }
+
+    s1Yes.textContent = CONFIG.questions.first.yesBtn;
+    s1No.textContent  = CONFIG.questions.first.noBtn;
+    secretBubble.textContent = CONFIG.questions.first.secretAnswer;
+
+    setQuestion(CONFIG.questions.first.text);
+
+    s1No.addEventListener("mouseenter", () => {
+      secretBubble.style.display = "block";
+    });
+
+    s1Yes.addEventListener("click", () => {
+      // go to step 2
+      showStep(2);
+      setQuestion(CONFIG.questions.second.text);
+      meterLabel.innerHTML = `${CONFIG.questions.second.startText} <strong id="pct">100%</strong>`;
+      // re-bind pct reference
+      const pctEl = document.getElementById("pct");
+      pctEl.textContent = "100%";
+      pct.textContent = "100%";
+    });
+
+    // if they click "No" in step 1, still proceed but keep it playful
+    s1No.addEventListener("click", () => {
+      showStep(2);
+      setQuestion(CONFIG.questions.second.text);
+    });
+
+    // ---- Step 2: love meter ----
+    function loveText(val){
+      if (val >= 5000) return CONFIG.loveMessages.extreme;
+      if (val >= 1000) return CONFIG.loveMessages.high;
+      return CONFIG.loveMessages.normal;
+    }
+
+    function updateMeter(){
+      const val = Number(slider.value);
+      pct.textContent = `${val}%`;
+      // also update the strong in label if it exists
+      const pctEl = document.getElementById("pct");
+      if (pctEl) pctEl.textContent = `${val}%`;
+      meterMsg.textContent = loveText(val);
+    }
+
+    slider.addEventListener("input", updateMeter);
+    updateMeter();
+
+    nextBtn.textContent = CONFIG.questions.second.nextBtn;
+    nextBtn.addEventListener("click", () => {
+      showStep(3);
+      setQuestion(CONFIG.questions.third.text);
+      finalYes.textContent = CONFIG.questions.third.yesBtn;
+      finalNo.textContent = CONFIG.questions.third.noBtn;
+    });
+
+    noThanks2.addEventListener("click", () => gentleExit());
+
+    // ---- Step 3 ----
+    finalYes.addEventListener("click", () => {
+      showStep(4);
+      setQuestion("");
+      celTitle.textContent = CONFIG.celebration.title;
+      celMsg.textContent = CONFIG.celebration.message;
+      partyEmojis(CONFIG.celebration.emojis, CONFIG.animations.bounceSpeed);
+      burstHearts();
+    });
+
+    finalNo.addEventListener("click", () => gentleExit());
+    noThanks3.addEventListener("click", (e) => { e.preventDefault(); gentleExit(); });
+
+    restartBtn.addEventListener("click", () => {
+      cleanupParty();
+      slider.value = 100;
+      updateMeter();
+      secretBubble.style.display = "none";
+      showStep(1);
+      setQuestion(CONFIG.questions.first.text);
+    });
+
+    function gentleExit(){
+      cleanupParty();
+      document.body.innerHTML =
+        "<div style='font-family:system-ui;display:grid;place-items:center;min-height:100vh;background:linear-gradient(135deg,"
+        +CONFIG.colors.backgroundStart+","+CONFIG.colors.backgroundEnd+");padding:24px;text-align:center'>"
+        +"<div style='max-width:640px;background:rgba(255,255,255,.88);border:1px solid rgba(255,255,255,.55);border-radius:22px;"
+        +"box-shadow:0 18px 45px rgba(0,0,0,.12);padding:28px'>"
+        +"<h1 style='margin:0 0 10px;color:"+CONFIG.colors.textColor+"'>All good 💛</h1>"
+        +"<p style='margin:0;line-height:1.5;color:#222'>Thanks for being honest. No awkwardness — have an amazing day.</p>"
+        +"</div></div>";
+    }
+
+    // ---- Floating background emojis ----
+    const floatLayer = document.getElementById("floatLayer");
+    const floatDur = CONFIG.animations.floatDuration;
+    const floatDist = parseInt(CONFIG.animations.floatDistance,10) || 50;
+
+    function spawnFloaty(){
+      const isHeart = Math.random() < 0.75;
+      const pool = isHeart ? CONFIG.floatingEmojis.hearts : CONFIG.floatingEmojis.bears;
+      const emoji = pool[Math.floor(Math.random()*pool.length)];
+
+      const el = document.createElement("div");
+      el.className = "floaty";
+      el.textContent = emoji;
+
+      const left = Math.random()*100; // vw
+      const drift = (Math.random()*2-1) * floatDist;
+
+      el.style.left = left + "vw";
+      el.style.setProperty("--dur", floatDur);
+      el.style.setProperty("--x0", "0px");
+      el.style.setProperty("--x1", drift + "px");
+      el.style.fontSize = (22 + Math.random()*18) + "px";
+      el.style.animationDelay = (-Math.random()*15) + "s";
+
+      floatLayer.appendChild(el);
+      // cleanup
+      setTimeout(()=> el.remove(), 22000);
+    }
+
+    // spawn a bunch, then keep going
+    for(let i=0;i<18;i++) spawnFloaty();
+    setInterval(spawnFloaty, 900);
+
+    // ---- Celebration emoji party ----
+    const partyLayer = document.getElementById("partyLayer");
+    let partyNodes = [];
+
+    function partyEmojis(str, bounceSpeed){
+      cleanupParty();
+      const emojis = Array.from(str);
+      for(let i=0;i<Math.min(30, emojis.length*4); i++){
+        const e = emojis[i % emojis.length];
+        const el = document.createElement("div");
+        el.className = "party-emoji";
+        el.textContent = e;
+        el.style.left = Math.random()*100 + "vw";
+        el.style.top  = Math.random()*100 + "vh";
+        el.style.setProperty("--bs", bounceSpeed);
+        partyLayer.appendChild(el);
+        partyNodes.push(el);
+      }
+    }
+
+    function cleanupParty(){
+      partyNodes.forEach(n=>n.remove());
+      partyNodes = [];
+    }
+
+    function burstHearts(){
+      // tiny “explosion” near center
+      const count = 14;
+      const size = CONFIG.animations.heartExplosionSize || 1.5;
+      for(let i=0;i<count;i++){
+        const el = document.createElement("div");
+        el.className = "floaty";
+        el.textContent = CONFIG.floatingEmojis.hearts[Math.floor(Math.random()*CONFIG.floatingEmojis.hearts.length)];
+        el.style.left = "50vw";
+        el.style.setProperty("--dur", "2.8s");
+        el.style.fontSize = (22*size) + "px";
+        el.style.setProperty("--x0", (Math.random()*40-20)+"px");
+        el.style.setProperty("--x1", (Math.random()*120-60)+"px");
+        floatLayer.appendChild(el);
+        setTimeout(()=> el.remove(), 3200);
+      }
+    }
+
+    // ---- Music (direct audio only) ----
+    const musicBtn = document.getElementById("musicBtn");
+    let audio = null;
+    let playing = false;
+
+    if(CONFIG.music.enabled && CONFIG.music.musicUrl){
+      musicBtn.style.display = "inline-block";
+      musicBtn.textContent = CONFIG.music.startText;
+      audio = new Audio(CONFIG.music.musicUrl);
+      audio.loop = true;
+      audio.volume = Math.max(0, Math.min(1, CONFIG.music.volume ?? 0.5));
+
+      const start = async () => {
+        try{
+          await audio.play();
+          playing = true;
+          musicBtn.textContent = CONFIG.music.stopText;
+        }catch(e){
+          // autoplay blocked; user must click
+          playing = false;
+          musicBtn.textContent = CONFIG.music.startText + " (click)";
+        }
+      };
+
+      musicBtn.addEventListener("click", async () => {
+        if(!audio) return;
+        if(!playing){
+          await start();
+        }else{
+          audio.pause();
+          playing = false;
+          musicBtn.textContent = CONFIG.music.startText;
+        }
+      });
+
+      if(CONFIG.music.autoplay){
+        // attempt (often blocked)
+        start();
+      }
+    }
+  </script>
+</body>
+</html>
